@@ -18,7 +18,6 @@ jobs:
     steps:
       - name : git clone your repo
         uses : actions/checkout@v2
-
       - name : check var
         run  : echo ${{ github.sha }}
 
