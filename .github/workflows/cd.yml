@@ -17,8 +17,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: git clone your repo
-      uses: actions/checkout@v2
+    - uses: actions/checkout@v1
+      with:
+        fetch-depth: 1
     - name: check var
       run: echo ${{ github.sha }}
 
