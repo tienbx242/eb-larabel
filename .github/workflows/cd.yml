@@ -1,41 +1,34 @@
-name: CI-CD Pilepline
-env:
-  EB-PACKAGE-S3-NAME  : "my-laravel"
-  EB-APP-NAME         : "Laravel-test-01"
-  EB-ENVI-NAME        : "Laraveltest01-env"
-  DEPLOY-PACKAGE-NAME : "laravel-${{ github.sha }}.zip"
-  AWS-REGION          : "ap-southeast-1"
-
-on:
-  push:
-    branches:
-      - master
-
+on: push
+name: CI
 jobs:
-  my-CI-CD:
-    name: Test
+  phpunit:
     runs-on: ubuntu-latest
-
+    container:
+      image: kirschbaumdevelopment/laravel-test-runner:7.3
+ 
+    services:
+      mysql:
+        image: mysql:5.7
+        env:
+          MYSQL_ROOT_PASSWORD: password
+          MYSQL_DATABASE: test
+        ports:
+          - 33306:3306
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+ 
     steps:
     - uses: actions/checkout@v1
       with:
         fetch-depth: 1
-    - name: check var
-      run: echo ${{ github.sha }}
-
-    - name: zip file
-      run: zip -r ${{ env.DEPLOY-PACKAGE-NAME }} ./ -x "vendor/*" ".git"
-
-    - name: configure AWS
-      uses: aws-actions/configure-aws-credentials
-      with:
-        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        aws-region: ap-southeast-1
-      
-    - name: copy Deploy to S3
-      run: aws s3 cp ${{ env.DEPLOY-PACKAGE-NAME }} s3://${{ EB-PACKAGE-S3-NAME }}/
-
-    - name: print message
-      run: echo "Success"
-             
+ 
+    - name: Install composer dependencies
+      run: |
+        composer install --no-scripts
+ 
+    - name: Prepare Laravel Application
+      run: |
+        cp .env.ci .env
+        php artisan key:generate
+ 
+    - name: Run Testsuite
+      run: vendor/bin/phpunit tests/
