@@ -1,22 +1,18 @@
+
+
 on: push
 name: CI
+env:
+  EB-PACKAGE-S3-NAME  : "my-laravel"
+  EB-APP-NAME         : "Laravel-test-01"
+  EB-ENVI-NAME        : "Laraveltest01-env"
+  DEPLOY-PACKAGE-NAME : "laravel-${{ github.sha }}.zip"
+  AWS-REGION          : "ap-southeast-1"
+
 jobs:
   phpunit:
     runs-on: ubuntu-latest
-    container:
-      image: kirschbaumdevelopment/laravel-test-runner:7.3
- 
-    services:
-      mysql:
-        image: mysql:5.7
-        env:
-          MYSQL_ROOT_PASSWORD: password
-          MYSQL_DATABASE: test
-        ports:
-          - 33306:3306
-        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
- 
-    steps:
+    steps:ß
     - uses: actions/checkout@v1
       with:
         fetch-depth: 1
