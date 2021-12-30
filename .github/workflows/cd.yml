@@ -45,16 +45,16 @@ jobs:
 
     - name: create applicate new ver
       run: |
-      aws elasticbeanstalk create-application-version \
-      --application-name ${{ env.EB-APP-NAME }} \
-      --source-bundle S3Bucket="${{ env.EB-PACKAGE-S3-NAME }}",S3Key="${{ env.DEPLOY-PACKAGE-NAME }}" \
-      --version-label v1 
+        aws elasticbeanstalk create-application-version \
+        --application-name ${{ env.EB-APP-NAME }} \
+        --source-bundle S3Bucket="${{ env.EB-PACKAGE-S3-NAME }}",S3Key="${{ env.DEPLOY-PACKAGE-NAME }}" \
+        --version-label "Version-${{ github.sha }}"
 
     - name: devploy
       run: |
-      update-environment \
-      --application-name ${{ EB-ENVI-NAME }} \
-      --version-label "Version-${{ github.sha }}"
+        aws elasticbeanstalk update-environment \
+        --application-name ${{ EB-ENVI-NAME }} \
+        --version-label "Version-${{ github.sha }}"
 
       
     - name: print message
