@@ -51,7 +51,7 @@ jobs:
       --version-label v1 
 
     - name: devploy
-      run |
+      run: |
       update-environment \
       --application-name ${{ EB-ENVI-NAME }} \
       --version-label "Version-${{ github.sha }}"
