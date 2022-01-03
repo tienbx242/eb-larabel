@@ -53,7 +53,7 @@ jobs:
     - name: devploy
       run: |
         aws elasticbeanstalk update-environment \
-        --application-name ${{ env.EB-ENVI-NAME }} \
+        --environment-name ${{ env.EB-ENVI-NAME }} \
         --version-label "Version-${{ github.sha }}"
 
       
