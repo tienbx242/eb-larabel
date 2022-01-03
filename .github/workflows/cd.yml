@@ -31,6 +31,9 @@ jobs:
     - name: check var
       run: echo ${{ github.sha }}
 
+    - name: check folder
+      run: ls -la
+
     - name: zip file
       run: zip -r ${{ env.DEPLOY-PACKAGE-NAME }} ./ -x "vendor/*" ".git"
 
